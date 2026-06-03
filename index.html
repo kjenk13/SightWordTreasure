@@ -4,80 +4,143 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Sight Word Treasure Hunt</title>
-
 <style>
 * { box-sizing: border-box; }
 
+:root {
+  --blue: #1976d2;
+  --navy: #14305f;
+  --orange: #ff6b00;
+  --yellow: #ffd166;
+  --cream: #fffaf0;
+  --purple: #7e57c2;
+  --green: #2ca25f;
+  --teal: #1aa6a6;
+  --pink: #ff5ca8;
+}
+
 body {
   margin: 0;
+  min-height: 100vh;
   font-family: "Arial Rounded MT Bold", "Trebuchet MS", Arial, sans-serif;
-  background: linear-gradient(135deg, #dff6ff, #fff7c2);
-  color: #1d3557;
+  background: radial-gradient(circle at top, #ffffff 0%, #f5fbff 42%, #fff6d5 100%);
+  color: var(--navy);
 }
 
 .app {
-  max-width: 1100px;
+  width: min(1180px, 100%);
   margin: 0 auto;
   padding: 14px;
-  text-align: center;
 }
 
-.card {
-  background: white;
-  border-radius: 24px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: 0 8px 22px rgba(0,0,0,.12);
-}
-
-h1, h2, h3 { margin-top: 0; color: #2a7de1; }
+.hidden { display: none !important; }
 
 button {
-  border: none;
+  border: 0;
   border-radius: 18px;
-  padding: 13px 16px;
-  font-size: 1rem;
-  font-weight: bold;
+  padding: 14px 18px;
   font-family: inherit;
+  font-weight: 900;
+  font-size: 1rem;
   cursor: pointer;
-  color: #123;
-  box-shadow: 0 5px 0 rgba(0,0,0,.15);
+  color: var(--navy);
+  box-shadow: 0 6px 0 rgba(0,0,0,.14);
   touch-action: manipulation;
 }
 
 button:active {
   transform: translateY(3px);
-  box-shadow: 0 2px 0 rgba(0,0,0,.15);
+  box-shadow: 0 3px 0 rgba(0,0,0,.14);
 }
 
-.primary { background: #ffd166; }
-.blue { background: #90dbf4; }
-.green { background: #b7e4c7; }
-.purple { background: #cdb4db; }
-.pink { background: #ffc8dd; }
-.gray { background: #e9ecef; }
+.home-btn { background: white; }
+.read-btn { background: #1976d2; color: white; }
+.parent-btn { background: var(--purple); color: white; }
+.gold-btn { background: var(--yellow); }
+.green-btn { background: #b7e4c7; }
+.pink-btn { background: #ffc8dd; }
+.gray-btn { background: #e9ecef; }
 
-.hidden { display: none !important; }
-
-.top-bar {
-  display: flex;
-  justify-content: space-between;
+.top-ui {
+  background: rgba(255,255,255,.96);
+  border-radius: 24px;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto auto;
+  gap: 16px;
   align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  box-shadow: 0 10px 26px rgba(0,0,0,.12);
+  margin-bottom: 10px;
+}
+
+.title {
+  text-align: center;
+  line-height: 1;
+}
+
+.title .small {
+  font-size: clamp(1.45rem, 4vw, 2.4rem);
+  color: var(--navy);
+  font-weight: 900;
+}
+
+.title .big {
+  font-size: clamp(2rem, 5vw, 3.8rem);
+  color: var(--orange);
+  font-weight: 900;
+  text-shadow: 0 3px 0 rgba(255,167,38,.25);
+}
+
+.coin-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  color: var(--navy);
+}
+
+.coin-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff3b0, #f4b942);
+  border: 5px solid #d99a00;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+}
+
+.coin-count {
+  font-size: 1.55rem;
+  color: var(--green);
+}
+
+.card {
+  background: rgba(255,255,255,.94);
+  border-radius: 24px;
+  padding: 18px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.11);
+  margin-bottom: 14px;
+}
+
+.home-screen h2,
+.parent-screen h2 {
+  margin-top: 0;
+  color: var(--blue);
 }
 
 .level-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  gap: 14px;
 }
 
 .level-card {
-  background: #e8f4ff;
+  background: #eef8ff;
   border: 4px solid #90dbf4;
-  border-radius: 20px;
-  padding: 12px;
+  border-radius: 22px;
+  padding: 14px;
+  text-align: center;
 }
 
 .level-card.locked {
@@ -85,54 +148,51 @@ button:active {
   filter: grayscale(1);
 }
 
-.progress-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
-  gap: 8px;
-  margin-top: 10px;
+.level-card h3 {
+  margin: 0 0 8px;
 }
 
-.progress-word {
-  background: #f8f9fa;
-  border: 3px solid #b7e4c7;
-  border-radius: 15px;
-  padding: 7px;
-  font-weight: bold;
+.instruction-pill {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  background: #fff5d6;
+  border: 3px solid #f0d48b;
+  border-radius: 999px;
+  padding: 12px 26px;
+  font-size: clamp(1rem, 2.3vw, 1.45rem);
+  font-weight: 900;
+  color: #613b0b;
+  box-shadow: 0 6px 14px rgba(0,0,0,.12);
+  white-space: nowrap;
 }
 
-.stars { color: #f4b942; letter-spacing: 1px; }
-
-.message {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #2d6a4f;
-  min-height: 32px;
-}
-
-.scene-wrap {
+.scene-area {
   position: relative;
-  width: 100%;
-  max-width: 1050px;
-  margin: 0 auto;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 7px solid #ffd166;
+  box-shadow: 0 12px 28px rgba(0,0,0,.16);
+  background: #c9f4ff;
 }
 
-.beach-svg {
+.scene-img {
+  display: block;
   width: 100%;
   height: auto;
-  border-radius: 28px;
-  border: 8px solid #ffd166;
-  box-shadow: 0 10px 24px rgba(0,0,0,.16);
-  background: #90dbf4;
-  display: block;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
 }
 
 .hotspot {
   position: absolute;
-  border: none;
   background: rgba(255,255,255,0);
   box-shadow: none;
+  border-radius: 50%;
   padding: 0;
-  border-radius: 20px;
 }
 
 .hotspot:active {
@@ -140,62 +200,189 @@ button:active {
   box-shadow: none;
 }
 
-.coin-pop {
-  position: absolute;
-  left: 50%;
-  top: 42%;
-  transform: translate(-50%, -50%);
-  background: white;
-  border: 5px solid #ffd166;
-  border-radius: 26px;
-  padding: 14px;
-  z-index: 20;
-  width: min(90%, 400px);
-  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+.hotspot.found {
+  display: none;
 }
 
-.coin {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #fff3b0, #f4b942);
-  border: 8px solid #d99a00;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 8px auto 12px;
-  font-size: 2.25rem;
+.sparkle {
+  position: absolute;
+  z-index: 8;
+  font-size: 2.8rem;
+  pointer-events: none;
+  animation: sparklePop .8s forwards;
+}
+
+@keyframes sparklePop {
+  0% { transform: scale(.4); opacity: 0; }
+  25% { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(.8); opacity: 0; }
+}
+
+.progress-panel {
+  background: rgba(255,250,240,.96);
+  border-radius: 0 0 24px 24px;
+  padding: 12px 18px 16px;
+  box-shadow: 0 9px 22px rgba(0,0,0,.08);
+}
+
+.progress-title {
   font-weight: 900;
+  color: var(--navy);
+  margin-bottom: 8px;
+  font-size: 1.15rem;
+}
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.progress-word {
+  background: white;
+  border: 3px solid #f0dfad;
+  border-radius: 16px;
+  padding: 8px;
+  font-weight: 900;
+  font-size: 1.2rem;
+}
+
+.progress-word:nth-child(1) { color: #1565c0; }
+.progress-word:nth-child(2) { color: #7e57c2; }
+.progress-word:nth-child(3) { color: #2ca25f; }
+.progress-word:nth-child(4) { color: #ff6b00; }
+.progress-word:nth-child(5) { color: #ff5ca8; }
+
+.stars {
+  margin-top: 4px;
+  color: #f6b800;
+  letter-spacing: 2px;
+  font-size: 1.25rem;
+}
+
+.coin-pop {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 20;
+  width: min(310px, 42%);
+  background: rgba(255,255,255,.96);
+  border-radius: 24px;
+  padding: 14px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.24);
+  text-align: center;
+}
+
+.coin-pop h2 {
+  color: var(--orange);
+  margin: 0 0 8px;
+}
+
+.big-coin {
+  width: 170px;
+  height: 170px;
+  max-width: 80%;
+  border-radius: 50%;
+  margin: 8px auto;
+  background: radial-gradient(circle at 30% 25%, #fff8c8 0%, #ffd44f 38%, #e6a800 100%);
+  border: 8px solid #d99a00;
+  box-shadow: inset -8px -10px 0 rgba(0,0,0,.08), 0 8px 16px rgba(0,0,0,.16);
+  display: grid;
+  place-items: center;
   color: #6b3e00;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 900;
   text-transform: lowercase;
 }
 
-.chest-dock {
-  background: #fff8dc;
-  border: 5px solid #ffd166;
+.sort-area {
+  background: rgba(255,250,240,.98);
   border-radius: 24px;
-  padding: 12px;
   margin-top: 12px;
+  padding: 12px 16px 18px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.10);
+}
+
+.sort-area h2 {
+  margin: 0 0 4px;
+  color: var(--navy);
+}
+
+.sort-area p {
+  margin: 0 0 10px;
+  font-weight: 800;
 }
 
 .chests {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 11px;
+  gap: 18px;
 }
 
 .chest {
-  background: #a2d2ff;
-  border: 4px solid #2a7de1;
-  border-radius: 20px;
-  padding: 13px 8px;
-  font-size: 1.4rem;
+  position: relative;
+  min-height: 135px;
+  border-radius: 20px 20px 14px 14px;
+  border: 5px solid #d99a00;
+  background: linear-gradient(#1e88e5 0 22%, #1565c0 22% 42%, #1e88e5 42% 62%, #1565c0 62% 82%, #1e88e5 82%);
+  color: white;
+  font-size: 1.65rem;
   font-weight: 900;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  padding-bottom: 12px;
+}
+
+.chest:nth-child(2) {
+  background: linear-gradient(#8e5ce6 0 22%, #6f42c1 22% 42%, #8e5ce6 42% 62%, #6f42c1 62% 82%, #8e5ce6 82%);
+}
+
+.chest:nth-child(3) {
+  background: linear-gradient(#24b8aa 0 22%, #118f86 22% 42%, #24b8aa 42% 62%, #118f86 62% 82%, #24b8aa 82%);
+}
+
+.chest::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 10%;
+  width: 80%;
+  height: 38px;
+  border-radius: 28px 28px 8px 8px;
+  background: inherit;
+  border: 5px solid #d99a00;
+}
+
+.chest::after {
+  content: "🔒";
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffd166;
+  color: #6b3e00;
+  border: 4px solid #d99a00;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+}
+
+.chest-label {
+  background: #fff8dc;
+  color: var(--navy);
+  border: 4px solid #d99a00;
+  border-radius: 12px;
+  min-width: 90px;
+  padding: 6px 12px;
+  z-index: 3;
 }
 
 .chest.shake {
   animation: shake .35s;
-  background: #ffc8dd;
 }
 
 @keyframes shake {
@@ -206,22 +393,18 @@ button:active {
   100% { transform: translateX(0); }
 }
 
-.sparkle {
-  position: absolute;
-  font-size: 2.6rem;
-  z-index: 15;
-  pointer-events: none;
-  animation: pop .8s forwards;
+.feedback {
+  background: #e3f2fd;
+  border-radius: 18px;
+  color: #1565c0;
+  font-weight: 900;
+  margin: 14px auto 0;
+  padding: 10px 14px;
+  max-width: 460px;
 }
 
-@keyframes pop {
-  0% { transform: scale(.5); opacity: 0; }
-  30% { transform: scale(1.3); opacity: 1; }
-  100% { transform: scale(.8); opacity: 0; }
-}
-
-.parent textarea,
-.parent input {
+.parent-screen input,
+.parent-screen textarea {
   width: 100%;
   border-radius: 16px;
   border: 3px solid #b7e4c7;
@@ -231,13 +414,40 @@ button:active {
   margin-bottom: 10px;
 }
 
-.parent textarea { min-height: 80px; }
+.parent-screen textarea { min-height: 80px; }
 
-@media (max-width: 650px) {
-  .coin { width: 130px; height: 130px; font-size: 1.8rem; }
-  .chests { grid-template-columns: 1fr; }
-  .chest { font-size: 1.25rem; }
-  h1 { font-size: 1.7rem; }
+@media (max-width: 780px) {
+  .top-ui {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .title {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+
+  .instruction-pill {
+    position: static;
+    transform: none;
+    margin: 10px;
+    white-space: normal;
+  }
+
+  .coin-pop {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    margin: 12px;
+  }
+
+  .progress-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chests {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
@@ -245,204 +455,78 @@ button:active {
 <body>
 <div class="app">
 
-  <div class="card top-bar">
-    <div>
-      <h1>🪙 Sight Word Treasure Hunt</h1>
-      <strong>Total Coins:</strong> <span id="coinTotal">0</span>
-    </div>
-    <div>
-      <button class="purple" onclick="showHome()">Home</button>
-      <button class="green" onclick="showParent()">Parent Portal</button>
-    </div>
-  </div>
+  <header class="top-ui">
+    <button class="home-btn" onclick="showHome()">🏠<br>Home</button>
 
-  <section id="homeScreen" class="card">
+    <div class="coin-badge">
+      <div class="coin-icon">🪙</div>
+      <div>
+        <div>Coins Found</div>
+        <div><span id="levelCoins" class="coin-count">0</span> / 15</div>
+      </div>
+    </div>
+
+    <div class="title">
+      <div class="small">Sight Word</div>
+      <div class="big">Treasure Hunt</div>
+    </div>
+
+    <button class="read-btn" onclick="readActiveWord()">🔊 Read Word</button>
+    <button class="parent-btn" onclick="showParent()">⚙️ Parent Portal</button>
+  </header>
+
+  <main id="homeScreen" class="card home-screen">
     <h2>Choose a Level</h2>
     <p>Each level has 5 words. Each word is practiced 3 times.</p>
     <div id="levelGrid" class="level-grid"></div>
-  </section>
+  </main>
 
-  <section id="gameScreen" class="hidden">
-    <div class="card">
+  <main id="gameScreen" class="hidden">
+    <section class="card">
       <h2 id="levelTitle"></h2>
-      <div class="message" id="message">Tap the beach objects to search for hidden coins!</div>
-      <button class="blue" onclick="readActiveWord()">🔊 Read Word</button>
+      <div id="message" class="feedback">Tap the beach objects to search for hidden coins!</div>
       <div id="progressGrid" class="progress-grid"></div>
-    </div>
+    </section>
 
-    <div class="scene-wrap" id="sceneWrap">
-      <svg class="beach-svg" viewBox="0 0 1000 620">
-        <defs>
-          <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stop-color="#78d9ff"/>
-            <stop offset="100%" stop-color="#c9f4ff"/>
-          </linearGradient>
-          <linearGradient id="sand" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stop-color="#f7df9b"/>
-            <stop offset="100%" stop-color="#eac46a"/>
-          </linearGradient>
-        </defs>
-
-        <rect width="1000" height="250" fill="url(#sky)"/>
-        <circle cx="85" cy="65" r="34" fill="#ffd166"/>
-        <ellipse cx="250" cy="70" rx="55" ry="18" fill="white"/>
-        <ellipse cx="725" cy="68" rx="55" ry="18" fill="white"/>
-
-        <rect y="155" width="1000" height="145" fill="#29a9f3"/>
-        <path d="M0 220 C150 185 280 255 430 215 C580 175 700 250 860 210 C930 195 970 200 1000 190 L1000 300 L0 300 Z" fill="#147bd1"/>
-        <path d="M0 290 C150 255 315 310 480 280 C650 250 800 305 1000 270 L1000 620 L0 620 Z" fill="url(#sand)"/>
-
-        <!-- decorative sea -->
-        <ellipse cx="620" cy="195" rx="85" ry="18" fill="#ef476f" opacity=".9"/>
-
-        <!-- OBJECTS THAT DISAPPEAR WHEN FOUND -->
-        <g id="obj0">
-          <path d="M58 390 L105 390 L96 485 L67 485 Z" fill="#2a9d8f"/>
-          <path d="M60 390 C65 355 98 355 103 390" fill="none" stroke="#1d3557" stroke-width="6"/>
-          <rect x="52" y="382" width="60" height="17" rx="8" fill="#52b788"/>
-        </g>
-
-        <g id="obj1">
-          <rect x="135" y="392" width="145" height="110" rx="10" fill="#d7a343"/>
-          <rect x="155" y="350" width="42" height="65" fill="#d7a343"/>
-          <rect x="220" y="355" width="42" height="60" fill="#d7a343"/>
-          <path d="M135 392 L165 355 L195 392 Z" fill="#bd8428"/>
-          <path d="M210 392 L240 355 L270 392 Z" fill="#bd8428"/>
-          <rect x="185" y="450" width="45" height="52" rx="22" fill="#89591e"/>
-          <circle cx="160" cy="425" r="7" fill="#89591e"/>
-          <circle cx="250" cy="425" r="7" fill="#89591e"/>
-          <path d="M165 350 L165 320 L210 337 L165 347" fill="#ef476f"/>
-        </g>
-
-        <g id="obj2">
-          <circle cx="245" cy="545" r="45" fill="white"/>
-          <path d="M245 500 A45 45 0 0 1 290 545 L245 545 Z" fill="#ef476f"/>
-          <path d="M245 545 L290 545 A45 45 0 0 1 245 590 Z" fill="#ffd166"/>
-          <path d="M245 545 L245 590 A45 45 0 0 1 200 545 Z" fill="#2a7de1"/>
-          <circle cx="245" cy="545" r="8" fill="white"/>
-        </g>
-
-        <g id="obj3">
-          <path d="M295 425 C310 325 318 250 340 190 C360 275 370 340 390 425 Z" fill="#259c43"/>
-          <path d="M340 190 C285 192 245 220 215 260 C275 245 315 222 340 190 Z" fill="#38b000"/>
-          <path d="M340 190 C395 195 430 225 460 270 C405 250 365 225 340 190 Z" fill="#38b000"/>
-          <path d="M340 190 C315 140 290 105 245 80 C305 88 340 130 340 190 Z" fill="#52b788"/>
-          <path d="M340 190 C380 145 420 120 470 105 C425 150 385 178 340 190 Z" fill="#52b788"/>
-        </g>
-
-        <g id="obj4">
-          <rect x="445" y="458" width="130" height="72" rx="10" fill="#b7791f"/>
-          <path d="M450 475 L570 458 M450 495 L575 475 M455 515 L575 495" stroke="#8c5a17" stroke-width="5"/>
-          <path d="M455 458 C475 415 545 415 565 458" fill="none" stroke="#8c5a17" stroke-width="8"/>
-        </g>
-
-        <g id="obj5">
-          <path d="M520 350 C565 318 610 340 620 385 C590 365 560 370 525 400 C505 375 502 358 520 350 Z" fill="#cdb4db"/>
-          <path d="M548 345 L542 388 M570 345 L565 382 M592 355 L580 392" stroke="#9d79b8" stroke-width="5"/>
-        </g>
-
-        <g id="obj6">
-          <rect x="612" y="448" width="210" height="105" rx="16" fill="#52b788"/>
-          <path d="M625 475 L805 475" stroke="#b7e4c7" stroke-width="8"/>
-          <path d="M625 512 L805 512" stroke="#b7e4c7" stroke-width="8"/>
-          <circle cx="805" cy="430" r="30" fill="#ef476f"/>
-          <rect x="710" y="418" width="32" height="88" rx="9" fill="#118ab2"/>
-          <circle cx="655" cy="430" r="25" fill="#1d3557"/>
-          <path d="M628 430 C645 400 675 400 690 430 Z" fill="#ef476f"/>
-        </g>
-
-        <g id="obj7">
-          <ellipse cx="720" cy="360" rx="55" ry="24" fill="white"/>
-          <path d="M760 355 C805 335 835 355 860 385 C820 380 790 370 760 355 Z" fill="#c2c7cc"/>
-          <circle cx="692" cy="345" r="22" fill="white"/>
-          <path d="M670 345 L640 335 L670 330" fill="#f4a261"/>
-          <circle cx="688" cy="340" r="4" fill="#1d3557"/>
-          <path d="M720 382 L705 410 M740 382 L752 410" stroke="#8d6e63" stroke-width="5"/>
-        </g>
-
-        <g id="obj8">
-          <ellipse cx="885" cy="485" rx="58" ry="40" fill="#f77f00"/>
-          <circle cx="862" cy="468" r="8" fill="white"/>
-          <circle cx="908" cy="468" r="8" fill="white"/>
-          <circle cx="862" cy="468" r="4" fill="#1d3557"/>
-          <circle cx="908" cy="468" r="4" fill="#1d3557"/>
-          <path d="M830 485 L780 455 M940 485 L985 455" stroke="#f77f00" stroke-width="14" stroke-linecap="round"/>
-          <path d="M815 525 L775 552 M855 528 L835 565 M915 528 L940 565 M955 525 L995 552" stroke="#f77f00" stroke-width="12" stroke-linecap="round"/>
-        </g>
-
-        <g id="obj9">
-          <path d="M905 330 C930 285 985 292 1000 350 L1000 405 L905 405 Z" fill="#adb5bd"/>
-        </g>
-
-        <g id="obj10">
-          <path d="M0 535 C40 485 110 502 138 560 L138 620 L0 620 Z" fill="#adb5bd"/>
-          <circle cx="70" cy="550" r="12" fill="#cdb4db"/>
-        </g>
-
-        <g id="obj11">
-          <ellipse cx="190" cy="225" rx="34" ry="23" fill="#ff6b8a"/>
-          <path d="M158 225 L125 205 L125 245 Z" fill="#ef476f"/>
-          <circle cx="202" cy="218" r="4" fill="#1d3557"/>
-        </g>
-
-        <g id="obj12">
-          <path d="M375 510 C400 480 440 480 465 510" fill="none" stroke="#495057" stroke-width="10" stroke-linecap="round"/>
-          <circle cx="380" cy="512" r="12" fill="#1d3557"/>
-          <circle cx="460" cy="512" r="12" fill="#1d3557"/>
-        </g>
-
-        <g id="obj13">
-          <rect x="850" y="545" width="75" height="30" rx="12" fill="#ef476f" transform="rotate(-18 850 545)"/>
-          <rect x="915" y="530" width="75" height="30" rx="12" fill="#ffd166" transform="rotate(20 915 530)"/>
-        </g>
-
-        <g id="obj14">
-          <path d="M555 565 C575 535 625 535 645 565 L635 590 L565 590 Z" fill="#52b788"/>
-          <circle cx="600" cy="542" r="18" fill="#52b788"/>
-          <path d="M582 542 L550 530 M618 542 L650 530" stroke="#52b788" stroke-width="8" stroke-linecap="round"/>
-        </g>
-
-        <circle cx="330" cy="510" r="5" fill="#d6a64a"/>
-        <circle cx="390" cy="455" r="4" fill="#d6a64a"/>
-        <circle cx="845" cy="390" r="5" fill="#d6a64a"/>
-        <circle cx="915" cy="575" r="4" fill="#d6a64a"/>
-      </svg>
-
+    <section class="scene-area" id="sceneArea">
+      <img src="beach-scene.png" class="scene-img" alt="Beach hidden object scene">
+      <div class="instruction-pill">Tap the beach objects to search for hidden coins!</div>
       <div id="hotspots"></div>
 
       <div id="coinPop" class="coin-pop hidden">
         <h2>You found a coin!</h2>
-        <div id="coinText" class="coin"></div>
-        <p>Read the word, then sort it into the matching chest.</p>
+        <div id="coinText" class="big-coin"></div>
+        <p><strong>Read the word, then sort it into the matching chest.</strong></p>
       </div>
-    </div>
+    </section>
 
-    <div id="chestDock" class="chest-dock hidden">
-      <h2>Choose the Matching Treasure Chest</h2>
-      <p>Tap a chest to hear the word and sort the coin.</p>
+    <section id="sortArea" class="sort-area hidden">
+      <h2>Choose the matching treasure chest!</h2>
+      <p>Tap a chest to hear the word.</p>
       <div id="chests" class="chests"></div>
-    </div>
-  </section>
+      <div id="sortFeedback" class="feedback">Great job! Keep searching!</div>
+    </section>
+  </main>
 
-  <section id="parentScreen" class="card parent hidden">
+  <main id="parentScreen" class="card parent-screen hidden">
     <h2>Parent Portal</h2>
     <p>Edit levels or add new ones. Use exactly 5 words per level.</p>
     <div id="parentLevels"></div>
 
     <h3>Add New Level</h3>
-    <input id="newLevelName" placeholder="Level name" />
+    <input id="newLevelName" placeholder="Level name">
     <textarea id="newLevelWords" placeholder="word1, word2, word3, word4, word5"></textarea>
-    <button class="green" onclick="addLevel()">Add Level</button>
+    <button class="green-btn" onclick="addLevel()">Add Level</button>
 
     <hr>
-    <button class="pink" onclick="resetProgress()">Reset Progress</button>
-    <button class="gray" onclick="restoreDefaults()">Restore Default Levels</button>
-  </section>
+    <button class="pink-btn" onclick="resetProgress()">Reset Progress</button>
+    <button class="gray-btn" onclick="restoreDefaults()">Restore Default Levels</button>
+  </main>
 
 </div>
 
 <script>
-const STORAGE_KEY = "sightWordTreasureHuntPolishedV4";
+const STORAGE_KEY = "sightWordTreasureHuntImageV1";
 
 const defaultLevels = [
   { name: "Level 1 — First Words", words: ["me", "he", "do", "go", "no"] },
@@ -462,33 +546,32 @@ const defaultLevels = [
 ];
 
 const hotspotPositions = [
-  { x: 5, y: 60, w: 8, h: 18 },
-  { x: 13, y: 56, w: 15, h: 24 },
-  { x: 20, y: 80, w: 10, h: 13 },
-  { x: 27, y: 23, w: 19, h: 46 },
-  { x: 44, y: 71, w: 14, h: 16 },
-  { x: 51, y: 51, w: 12, h: 14 },
-  { x: 61, y: 68, w: 21, h: 20 },
-  { x: 67, y: 51, w: 19, h: 18 },
-  { x: 82, y: 69, w: 15, h: 20 },
-  { x: 90, y: 45, w: 10, h: 20 },
-  { x: 0, y: 78, w: 14, h: 20 },
-  { x: 12, y: 32, w: 12, h: 12 },
-  { x: 36, y: 79, w: 10, h: 10 },
-  { x: 84, y: 83, w: 15, h: 10 },
-  { x: 55, y: 84, w: 11, h: 11 }
+  { x: 10, y: 58, w: 12, h: 18 },
+  { x: 23, y: 64, w: 12, h: 15 },
+  { x: 32, y: 66, w: 9, h: 12 },
+  { x: 46, y: 63, w: 12, h: 17 },
+  { x: 56, y: 58, w: 10, h: 18 },
+  { x: 66, y: 65, w: 9, h: 14 },
+  { x: 74, y: 63, w: 10, h: 14 },
+  { x: 80, y: 52, w: 9, h: 14 },
+  { x: 88, y: 50, w: 10, h: 18 },
+  { x: 90, y: 70, w: 9, h: 14 },
+  { x: 13, y: 42, w: 10, h: 12 },
+  { x: 35, y: 36, w: 20, h: 23 },
+  { x: 63, y: 31, w: 18, h: 16 },
+  { x: 73, y: 29, w: 20, h: 22 },
+  { x: 5, y: 82, w: 12, h: 14 }
 ];
 
 let state = loadState();
 let currentLevelIndex = 0;
 let currentCoins = [];
-let activeCoin = null;
 let levelProgress = {};
+let activeCoin = null;
 
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) return JSON.parse(saved);
-
   return {
     levels: defaultLevels,
     unlockedLevel: 0,
@@ -505,7 +588,9 @@ function showHome() {
   document.getElementById("homeScreen").classList.remove("hidden");
   document.getElementById("gameScreen").classList.add("hidden");
   document.getElementById("parentScreen").classList.add("hidden");
+  activeCoin = null;
   renderHome();
+  updateCoinHeader();
 }
 
 function showParent() {
@@ -516,7 +601,6 @@ function showParent() {
 }
 
 function renderHome() {
-  document.getElementById("coinTotal").textContent = state.totalCoins;
   const grid = document.getElementById("levelGrid");
   grid.innerHTML = "";
 
@@ -529,7 +613,7 @@ function renderHome() {
     div.innerHTML = `
       <h3>${completed ? "⭐ " : ""}${escapeHTML(level.name)}</h3>
       <p>${escapeHTML(level.words.join(", "))}</p>
-      <button class="${locked ? "gray" : "primary"}" ${locked ? "disabled" : ""}>
+      <button class="${locked ? "gray-btn" : "gold-btn"}" ${locked ? "disabled" : ""}>
         ${locked ? "Locked" : "Play"}
       </button>
     `;
@@ -546,12 +630,13 @@ function startLevel(index) {
   currentLevelIndex = index;
   const level = state.levels[index];
 
-  levelProgress = {};
-  level.words.forEach(word => levelProgress[word] = 0);
-
   currentCoins = [];
+  levelProgress = {};
   level.words.forEach(word => {
-    for (let i = 0; i < 3; i++) currentCoins.push({ word, sorted: false });
+    levelProgress[word] = 0;
+    for (let i = 0; i < 3; i++) {
+      currentCoins.push({ word, sorted: false });
+    }
   });
 
   currentCoins = shuffle(currentCoins);
@@ -560,19 +645,19 @@ function startLevel(index) {
   document.getElementById("homeScreen").classList.add("hidden");
   document.getElementById("parentScreen").classList.add("hidden");
   document.getElementById("gameScreen").classList.remove("hidden");
+  document.getElementById("coinPop").classList.add("hidden");
+  document.getElementById("sortArea").classList.add("hidden");
 
   renderGame();
 }
 
 function renderGame() {
-  const level = state.levels[currentLevelIndex];
-  document.getElementById("levelTitle").textContent = level.name;
+  document.getElementById("levelTitle").textContent = state.levels[currentLevelIndex].name;
   document.getElementById("message").textContent = "Tap the beach objects to search for hidden coins!";
-  document.getElementById("coinPop").classList.add("hidden");
-  document.getElementById("chestDock").classList.add("hidden");
+  document.getElementById("sortFeedback").textContent = "Great job! Keep searching!";
   renderProgress();
-  renderObjects();
   renderHotspots();
+  updateCoinHeader();
 }
 
 function renderProgress() {
@@ -582,19 +667,11 @@ function renderProgress() {
   state.levels[currentLevelIndex].words.forEach(word => {
     const count = levelProgress[word] || 0;
     const stars = "★".repeat(count) + "☆".repeat(3 - count);
-
     const div = document.createElement("div");
     div.className = "progress-word";
     div.innerHTML = `${escapeHTML(word)}<div class="stars">${stars}</div>`;
     grid.appendChild(div);
   });
-}
-
-function renderObjects() {
-  for (let i = 0; i < 15; i++) {
-    const obj = document.getElementById(`obj${i}`);
-    if (obj) obj.style.display = currentCoins[i]?.sorted ? "none" : "block";
-  }
 }
 
 function renderHotspots() {
@@ -611,7 +688,6 @@ function renderHotspots() {
     btn.style.top = pos.y + "%";
     btn.style.width = pos.w + "%";
     btn.style.height = pos.h + "%";
-    btn.setAttribute("aria-label", "Search hidden coin");
     btn.onclick = () => revealCoin(index);
     container.appendChild(btn);
   });
@@ -619,14 +695,14 @@ function renderHotspots() {
 
 function revealCoin(index) {
   const coin = currentCoins[index];
-  if (coin.sorted) return;
+  if (!coin || coin.sorted) return;
 
   activeCoin = { word: coin.word, index };
 
   document.getElementById("coinText").textContent = coin.word;
   document.getElementById("coinPop").classList.remove("hidden");
-  document.getElementById("chestDock").classList.remove("hidden");
-  document.getElementById("message").textContent = "You found a coin! Read it and sort it.";
+  document.getElementById("sortArea").classList.remove("hidden");
+  document.getElementById("message").textContent = "You found a coin! Read it, then sort it.";
 
   renderChests();
   speak(coin.word);
@@ -636,21 +712,17 @@ function renderChests() {
   const chests = document.getElementById("chests");
   chests.innerHTML = "";
 
-  const choices = getChestChoices(activeCoin.word);
-
-  choices.forEach(choice => {
+  getChestChoices(activeCoin.word).forEach(choice => {
     const btn = document.createElement("button");
     btn.className = "chest";
-    btn.textContent = "📦 " + choice;
-
+    btn.innerHTML = `<span class="chest-label">${escapeHTML(choice)}</span>`;
     btn.onclick = () => {
       speak(choice);
       setTimeout(() => {
         if (choice === activeCoin.word) correctSort();
         else wrongSort(btn);
-      }, 300);
+      }, 280);
     };
-
     chests.appendChild(btn);
   });
 }
@@ -669,40 +741,25 @@ function correctSort() {
   showSparkle(activeCoin.index);
 
   activeCoin = null;
-
-  document.getElementById("message").textContent = "Great job! You sorted the coin!";
   document.getElementById("coinPop").classList.add("hidden");
-  document.getElementById("chestDock").classList.add("hidden");
+  document.getElementById("sortArea").classList.add("hidden");
+  document.getElementById("message").textContent = "Great job! Keep searching!";
 
-  saveState();
   renderProgress();
-  renderObjects();
   renderHotspots();
+  updateCoinHeader();
+  saveState();
   checkLevelComplete();
 }
 
-function showSparkle(index) {
-  const wrap = document.getElementById("sceneWrap");
-  const pos = hotspotPositions[index];
-
-  const sparkle = document.createElement("div");
-  sparkle.className = "sparkle";
-  sparkle.textContent = "✨";
-  sparkle.style.left = (pos.x + pos.w / 2) + "%";
-  sparkle.style.top = (pos.y + pos.h / 2) + "%";
-
-  wrap.appendChild(sparkle);
-  setTimeout(() => sparkle.remove(), 850);
-}
-
-function wrongSort(button) {
-  document.getElementById("message").textContent = "Not quite! Try another chest.";
-  button.classList.add("shake");
-  setTimeout(() => button.classList.remove("shake"), 400);
+function wrongSort(btn) {
+  document.getElementById("sortFeedback").textContent = "Not quite! Try another chest.";
+  btn.classList.add("shake");
+  setTimeout(() => btn.classList.remove("shake"), 400);
 }
 
 function checkLevelComplete() {
-  if (!currentCoins.every(coin => coin.sorted)) return;
+  if (!currentCoins.every(c => c.sorted)) return;
 
   if (!state.completedLevels.includes(currentLevelIndex)) {
     state.completedLevels.push(currentLevelIndex);
@@ -718,6 +775,23 @@ function checkLevelComplete() {
     alert("🎉 Treasure Found! You completed the level!");
     showHome();
   }, 500);
+}
+
+function updateCoinHeader() {
+  const found = currentCoins.length ? currentCoins.filter(c => c.sorted).length : 0;
+  document.getElementById("levelCoins").textContent = found;
+}
+
+function showSparkle(index) {
+  const scene = document.getElementById("sceneArea");
+  const pos = hotspotPositions[index];
+  const sparkle = document.createElement("div");
+  sparkle.className = "sparkle";
+  sparkle.textContent = "✨";
+  sparkle.style.left = (pos.x + pos.w / 2) + "%";
+  sparkle.style.top = (pos.y + pos.h / 2) + "%";
+  scene.appendChild(sparkle);
+  setTimeout(() => sparkle.remove(), 850);
 }
 
 function readActiveWord() {
@@ -742,9 +816,9 @@ function renderParent() {
     div.className = "card";
     div.innerHTML = `
       <h3>${escapeHTML(level.name)}</h3>
-      <input id="name-${index}" value="${escapeHTML(level.name)}" />
+      <input id="name-${index}" value="${escapeHTML(level.name)}">
       <textarea id="words-${index}">${escapeHTML(level.words.join(", "))}</textarea>
-      <button class="blue" onclick="saveLevel(${index})">Save Level</button>
+      <button class="read-btn" onclick="saveLevel(${index})">Save Level</button>
     `;
     container.appendChild(div);
   });
