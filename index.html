@@ -549,6 +549,229 @@ button:active {
   .scene-img { height: auto; object-fit: contain; }
   .chests { grid-template-columns: repeat(5, 1fr); gap: 5px; }
 }
+
+/* --- Final compact iPad game layout --- */
+.app {
+  height: 100dvh;
+  overflow: hidden;
+  padding: 6px;
+}
+
+.top-ui {
+  border-radius: 16px;
+  padding: 6px 8px;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex: 0 0 auto;
+}
+
+button {
+  padding: 8px 11px;
+  border-radius: 14px;
+  font-size: .82rem;
+}
+
+.home-btn,
+.read-btn,
+.parent-btn {
+  min-height: 42px;
+}
+
+.coin-badge {
+  gap: 6px;
+  font-size: .82rem;
+  line-height: 1.1;
+  min-width: 118px;
+}
+
+.coin-icon {
+  width: 34px;
+  height: 34px;
+  border-width: 3px;
+  font-size: 1.15rem;
+  flex: 0 0 auto;
+}
+
+.coin-count {
+  font-size: 1.1rem;
+}
+
+.title .small {
+  font-size: clamp(.95rem, 2vw, 1.35rem);
+}
+
+.title .big {
+  font-size: clamp(1.25rem, 3.1vw, 2.15rem);
+}
+
+#gameScreen:not(.hidden) {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 4px;
+}
+
+.compact-progress-card {
+  padding: 5px 8px;
+  margin: 0;
+  border-radius: 14px;
+}
+
+.progress-grid {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+
+.progress-word {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 5px;
+  border-width: 2px;
+  border-radius: 12px;
+  font-size: clamp(.76rem, 1.55vw, .95rem);
+  line-height: 1;
+}
+
+.stars {
+  margin-top: 0;
+  font-size: clamp(.72rem, 1.45vw, .9rem);
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.scene-area {
+  height: 100%;
+  min-height: 0;
+  border-width: 5px;
+  border-radius: 18px;
+}
+
+.scene-img {
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.instruction-pill,
+.feedback,
+.sort-area h2,
+.sort-area p,
+#sortFeedback {
+  display: none !important;
+}
+
+.sort-area {
+  margin-top: 0;
+  padding: 5px 8px 7px;
+  border-radius: 16px;
+  flex: 0 0 auto;
+}
+
+.chests {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+}
+
+.chest {
+  min-height: 62px;
+  border-width: 3px;
+  border-radius: 13px 13px 10px 10px;
+  padding-bottom: 4px;
+}
+
+.chest::before {
+  top: -8px;
+  height: 20px;
+  border-width: 3px;
+}
+
+.chest::after {
+  top: 12px;
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
+  font-size: .7rem;
+}
+
+.chest-label {
+  min-width: 46px;
+  padding: 3px 6px;
+  border-width: 2px;
+  border-radius: 8px;
+  font-size: clamp(.75rem, 1.5vw, .95rem);
+}
+
+.coin-pop {
+  left: 10px;
+  bottom: 10px;
+  width: min(170px, 30%);
+  padding: 7px;
+  border-radius: 16px;
+}
+
+.coin-pop h2,
+.coin-pop p {
+  display: none;
+}
+
+.big-coin {
+  width: 86px;
+  height: 86px;
+  border-width: 5px;
+  margin: 0 auto;
+  font-size: clamp(1.25rem, 3vw, 1.85rem);
+}
+
+.search-marker {
+  width: 28px;
+  height: 28px;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 780px) {
+  .top-ui {
+    grid-template-columns: auto auto 1fr auto auto;
+    gap: 5px;
+  }
+
+  .home-btn,
+  .read-btn,
+  .parent-btn {
+    padding: 7px 8px;
+    font-size: .75rem;
+  }
+
+  .coin-badge {
+    min-width: 92px;
+    font-size: .72rem;
+  }
+
+  .coin-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+
+  .title .small {
+    font-size: .95rem;
+  }
+
+  .title .big {
+    font-size: 1.45rem;
+  }
+}
+
+@media (max-width: 560px) {
+  body { overflow: auto; }
+  .app { height: auto; overflow: visible; }
+  #gameScreen:not(.hidden) { display: block; }
+  .scene-area { height: auto; }
+  .scene-img { height: auto; object-fit: contain; }
+}
+
 </style>
 </head>
 
@@ -561,7 +784,7 @@ button:active {
     <div class="coin-badge">
       <div class="coin-icon">🪙</div>
       <div>
-        <div>Coins Found</div>
+        <div id="currentLevelName">Choose Level</div>
         <div><span id="levelCoins" class="coin-count">0</span> / 15</div>
       </div>
     </div>
@@ -582,29 +805,21 @@ button:active {
   </main>
 
   <main id="gameScreen" class="hidden">
-    <section class="card">
-      <h2 id="levelTitle"></h2>
-      <div id="message" class="feedback">Tap the sparkling beach objects to find hidden coins!</div>
+    <section class="card compact-progress-card">
       <div id="progressGrid" class="progress-grid"></div>
     </section>
 
     <section class="scene-area" id="sceneArea">
       <img src="beach-scene.png" class="scene-img" alt="Beach hidden object scene">
-      <div class="instruction-pill">Tap the sparkling beach objects to find hidden coins!</div>
       <div id="hotspots"></div>
 
       <div id="coinPop" class="coin-pop hidden">
-        <h2>You found a coin!</h2>
         <div id="coinText" class="big-coin"></div>
-        <p><strong>Read the word, then sort it into the matching chest.</strong></p>
       </div>
     </section>
 
     <section id="sortArea" class="sort-area">
-      <h2>Sort the coin into the matching chest!</h2>
-      <p>The 5 chests stay the same for this level.</p>
       <div id="chests" class="chests"></div>
-      <div id="sortFeedback" class="feedback">Great job! Keep searching!</div>
     </section>
   </main>
 
@@ -626,7 +841,7 @@ button:active {
 </div>
 
 <script>
-const STORAGE_KEY = "sightWordTreasureHuntImageV4";
+const STORAGE_KEY = "sightWordTreasureHuntCompactV5";
 
 const defaultLevels = [
   { name: "Level 1 — First Words", words: ["me", "he", "do", "go", "no"] },
@@ -751,9 +966,6 @@ function startLevel(index) {
 }
 
 function renderGame() {
-  document.getElementById("levelTitle").textContent = state.levels[currentLevelIndex].name;
-  document.getElementById("message").textContent = "Tap the sparkling beach objects to find hidden coins!";
-  document.getElementById("sortFeedback").textContent = "Find a coin, then tap the matching chest.";
   renderProgress();
   renderHotspots();
   renderChests();
@@ -810,7 +1022,6 @@ function revealCoin(index) {
 
   document.getElementById("coinText").textContent = coin.word;
   document.getElementById("coinPop").classList.remove("hidden");
-    document.getElementById("message").textContent = "You found a coin! Read it, then sort it.";
 
   renderChests();
   speak(coin.word);
@@ -828,7 +1039,6 @@ function renderChests() {
       speak(choice);
 
       if (!activeCoin) {
-        document.getElementById("sortFeedback").textContent = "Find a coin first, then choose its chest!";
         return;
       }
 
@@ -851,8 +1061,6 @@ function correctSort() {
 
   activeCoin = null;
   document.getElementById("coinPop").classList.add("hidden");
-    document.getElementById("message").textContent = "Great job! Find another sparkling object!";
-  document.getElementById("sortFeedback").textContent = "Coin sorted! Keep searching!";
 
   renderProgress();
   renderHotspots();
@@ -863,7 +1071,6 @@ function correctSort() {
 }
 
 function wrongSort(btn) {
-  document.getElementById("sortFeedback").textContent = "Not quite! Try another chest.";
   btn.classList.add("shake");
   setTimeout(() => btn.classList.remove("shake"), 400);
 }
@@ -890,6 +1097,11 @@ function checkLevelComplete() {
 function updateCoinHeader() {
   const found = currentCoins.length ? currentCoins.filter(c => c.sorted).length : 0;
   document.getElementById("levelCoins").textContent = found;
+
+  const levelName = state.levels[currentLevelIndex]?.name || "Choose Level";
+  const shortName = levelName.replace(/^Level\s*\d+\s*[—-]\s*/i, "");
+  const levelNameEl = document.getElementById("currentLevelName");
+  if (levelNameEl) levelNameEl.textContent = shortName;
 }
 
 function showSparkle(index) {
@@ -906,7 +1118,7 @@ function showSparkle(index) {
 
 function readActiveWord() {
   if (activeCoin) speak(activeCoin.word);
-  else document.getElementById("message").textContent = "Find a coin first, then I can read it!";
+  else
 }
 
 function speak(text) {
