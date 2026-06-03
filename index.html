@@ -519,7 +519,7 @@ button:active {
   </main>
 
   <main id="gameScreen" class="hidden">
-    <section class="card compact-progress-card">
+    <section class="card compact-progress-card" style="display:none">
       <div id="progressGrid" class="progress-grid"></div>
     </section>
 
@@ -534,7 +534,7 @@ button:active {
     </section>
 
     <section id="sortArea" class="sort-area">
-      <div id="chests" class="chests"></div>
+      <div id="chests" class="chests"></div><div id="chestProgress" class="progress-grid" style="margin-top:6px"></div>
     </section>
   </main>
 
@@ -627,6 +627,11 @@ function showHome() {
 }
 
 function showParent() {
+  const code = prompt("Enter Parent Code");
+  if (code !== "0000") {
+    alert("Incorrect code");
+    return;
+  }
   document.getElementById("homeScreen").classList.add("hidden");
   document.getElementById("gameScreen").classList.add("hidden");
   document.getElementById("parentScreen").classList.remove("hidden");
@@ -685,10 +690,26 @@ function startLevel(index) {
 
 function renderGame() {
   renderProgress();
+  renderChestProgress();
   renderObjects();
   renderHotspots();
   renderChests();
   updateCoinHeader();
+}
+
+
+function renderChestProgress() {
+  const grid = document.getElementById("chestProgress");
+  if (!grid) return;
+  grid.innerHTML = "";
+
+  state.levels[currentLevelIndex].words.forEach(word => {
+    const count = levelProgress[word] || 0;
+    const div = document.createElement("div");
+    div.className = "progress-word";
+    div.innerHTML = '<span class="stars">' + ("★".repeat(count) + "☆".repeat(3-count)) + '</span>';
+    grid.appendChild(div);
+  });
 }
 
 function renderProgress() {
@@ -797,6 +818,7 @@ function correctSort() {
   document.getElementById("coinPop").classList.add("hidden");
 
   renderProgress();
+  renderChestProgress();
   renderObjects();
   renderHotspots();
   updateCoinHeader();
