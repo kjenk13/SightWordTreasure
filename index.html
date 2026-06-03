@@ -204,6 +204,34 @@ button:active {
   display: none;
 }
 
+.search-marker {
+  position: absolute;
+  z-index: 7;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.55rem;
+  background: rgba(255, 255, 255, .86);
+  border: 3px solid rgba(255, 209, 102, .95);
+  box-shadow: 0 0 14px rgba(255, 209, 102, .95);
+  pointer-events: none;
+  animation: markerPulse 1.25s infinite ease-in-out;
+}
+
+@keyframes markerPulse {
+  0%, 100% {
+    transform: scale(.95);
+    box-shadow: 0 0 10px rgba(255, 209, 102, .8);
+  }
+  50% {
+    transform: scale(1.16);
+    box-shadow: 0 0 22px rgba(255, 209, 102, 1);
+  }
+}
+
+
 .sparkle {
   position: absolute;
   z-index: 8;
@@ -484,13 +512,13 @@ button:active {
   <main id="gameScreen" class="hidden">
     <section class="card">
       <h2 id="levelTitle"></h2>
-      <div id="message" class="feedback">Tap the beach objects to search for hidden coins!</div>
+      <div id="message" class="feedback">Tap the sparkling beach objects to find hidden coins!</div>
       <div id="progressGrid" class="progress-grid"></div>
     </section>
 
     <section class="scene-area" id="sceneArea">
       <img src="beach-scene.png" class="scene-img" alt="Beach hidden object scene">
-      <div class="instruction-pill">Tap the beach objects to search for hidden coins!</div>
+      <div class="instruction-pill">Tap the sparkling beach objects to find hidden coins!</div>
       <div id="hotspots"></div>
 
       <div id="coinPop" class="coin-pop hidden">
@@ -526,7 +554,7 @@ button:active {
 </div>
 
 <script>
-const STORAGE_KEY = "sightWordTreasureHuntImageV1";
+const STORAGE_KEY = "sightWordTreasureHuntImageV2";
 
 const defaultLevels = [
   { name: "Level 1 — First Words", words: ["me", "he", "do", "go", "no"] },
@@ -653,7 +681,7 @@ function startLevel(index) {
 
 function renderGame() {
   document.getElementById("levelTitle").textContent = state.levels[currentLevelIndex].name;
-  document.getElementById("message").textContent = "Tap the beach objects to search for hidden coins!";
+  document.getElementById("message").textContent = "Tap the sparkling beach objects to find hidden coins!";
   document.getElementById("sortFeedback").textContent = "Great job! Keep searching!";
   renderProgress();
   renderHotspots();
@@ -682,12 +710,21 @@ function renderHotspots() {
     if (coin.sorted) return;
 
     const pos = hotspotPositions[index];
+
+    const marker = document.createElement("div");
+    marker.className = "search-marker";
+    marker.textContent = "✨";
+    marker.style.left = `calc(${pos.x + pos.w / 2}% - 17px)`;
+    marker.style.top = `calc(${pos.y + pos.h / 2}% - 17px)`;
+    container.appendChild(marker);
+
     const btn = document.createElement("button");
     btn.className = "hotspot";
     btn.style.left = pos.x + "%";
     btn.style.top = pos.y + "%";
     btn.style.width = pos.w + "%";
     btn.style.height = pos.h + "%";
+    btn.setAttribute("aria-label", "Search sparkling beach object");
     btn.onclick = () => revealCoin(index);
     container.appendChild(btn);
   });
