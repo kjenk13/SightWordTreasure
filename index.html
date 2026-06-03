@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sight Word Treasure Hunt</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Arial Rounded MT Bold", "Trebuchet MS", Arial, sans-serif;
+  background: linear-gradient(135deg, #dff6ff, #fff7c2);
+  min-height: 100vh;
+  color: #1d3557;
+}
+
+.app {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.card {
+  background: white;
+  border-radius: 28px;
+  padding: 22px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+  margin-bottom: 18px;
+}
+
+h1, h2, h3 {
+  margin-top: 0;
+  color: #2a7de1;
+}
+
+button {
+  border: none;
+  border-radius: 20px;
+  padding: 15px 18px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  font-family: inherit;
+  cursor: pointer;
+  color: #123;
+  box-shadow: 0 5px 0 rgba(0,0,0,0.12);
+  touch-action: manipulation;
+}
+
+button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.12);
+}
+
+.primary { background: #ffd166; }
+.blue { background: #90dbf4; }
+.green { background: #b7e4c7; }
+.purple { background: #cdb4db; }
+.pink { background: #ffc8dd; }
+.gray { background: #e9ecef; }
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.level-card {
+  border: 4px solid #90dbf4;
+  background: #e8f4ff;
+  border-radius: 22px;
+  padding: 16px;
+}
+
+.level-card.locked {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.map {
+  border-radius: 28px;
+  padding: 18px;
+  min-height: 390px;
+  background: linear-gradient(135deg, #ffe8a3, #90dbf4);
+  border: 5px solid #ffd166;
+}
+
+.map.forest { background: linear-gradient(135deg, #b7e4c7, #52b788); }
+.map.pirate { background: linear-gradient(135deg, #ffd166, #a2d2ff); }
+.map.castle { background: linear-gradient(135deg, #cdb4db, #ffc8dd); }
+.map.volcano { background: linear-gradient(135deg, #ffadad, #ffd166); }
+.map.cave { background: linear-gradient(135deg, #adb5bd, #dee2e6); }
+
+.spots {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.spot {
+  min-height: 82px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.55);
+  border: 3px dashed rgba(29,53,87,0.25);
+  font-size: 2rem;
+}
+
+.spot.found {
+  background: #d8f8dc;
+  border-style: solid;
+  opacity: 0.75;
+}
+
+.coin-panel {
+  background: white;
+  border: 5px solid #ffd166;
+  border-radius: 28px;
+  padding: 18px;
+  margin-top: 18px;
+}
+
+.coin {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff3b0, #f4b942);
+  border: 8px solid #d99a00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px auto 16px;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #6b3e00;
+  text-transform: lowercase;
+}
+
+.chests {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.chest {
+  background: #a2d2ff;
+  border: 4px solid #2a7de1;
+  border-radius: 22px;
+  padding: 16px 10px;
+  font-size: 1.7rem;
+  font-weight: 900;
+}
+
+.chest.shake {
+  animation: shake 0.35s;
+  background: #ffc8dd;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-8px); }
+  100% { transform: translateX(0); }
+}
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.progress-word {
+  background: #f8f9fa;
+  border: 3px solid #b7e4c7;
+  border-radius: 18px;
+  padding: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.stars {
+  color: #f4b942;
+  letter-spacing: 2px;
+}
+
+.message {
+  font-size: 1.35rem;
+  font-weight: bold;
+  color: #2d6a4f;
+  min-height: 34px;
+}
+
+.parent textarea {
+  width: 100%;
+  min-height: 90px;
+  border-radius: 18px;
+  border: 3px solid #b7e4c7;
+  padding: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  margin-bottom: 10px;
+}
+
+.parent input {
+  width: 100%;
+  border-radius: 16px;
+  border: 3px solid #b7e4c7;
+  padding: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  margin-bottom: 10px;
+}
+
+.hidden { display: none; }
+
+@media (max-width: 650px) {
+  .spots { grid-template-columns: repeat(3, 1fr); }
+  .chests { grid-template-columns: 1fr; }
+  .coin { width: 140px; height: 140px; font-size: 2rem; }
+  button { font-size: 1rem; }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <div class="card top-bar">
+    <div>
+      <h1>🪙 Sight Word Treasure Hunt</h1>
+      <div><strong>Total Coins:</strong> <span id="coinTotal">0</span></div>
+    </div>
+    <div>
+      <button class="purple" onclick="showHome()">Home</button>
+      <button class="green" onclick="showParent()">Parent Portal</button>
+    </div>
+  </div>
+
+  <section id="homeScreen" class="card">
+    <h2>Choose a Level</h2>
+    <p>Find 15 coins. Each word appears 3 times.</p>
+    <div id="levelGrid" class="level-grid"></div>
+  </section>
+
+  <section id="gameScreen" class="hidden">
+    <div class="card">
+      <h2 id="levelTitle"></h2>
+      <div class="message" id="message">Tap a treasure spot to find a coin!</div>
+      <button class="blue" onclick="readActiveWord()">🔊 Read Word</button>
+
+      <div id="progressGrid" class="progress-grid"></div>
+    </div>
+
+    <div id="map" class="map">
+      <h2 id="mapTitle"></h2>
+      <div id="spots" class="spots"></div>
+    </div>
+
+    <div id="coinPanel" class="coin-panel hidden">
+      <h2>Sort the Coin</h2>
+      <div id="coin" class="coin"></div>
+      <p>Tap a chest label to hear it. Tap the matching chest to sort.</p>
+      <div id="chests" class="chests"></div>
+    </div>
+  </section>
+
+  <section id="parentScreen" class="card parent hidden">
+    <h2>Parent Portal</h2>
+    <p>Edit levels or add new ones. Use 5 words per level, separated by commas.</p>
+
+    <div id="parentLevels"></div>
+
+    <h3>Add New Level</h3>
+    <input id="newLevelName" placeholder="Level name, example: Level 15 — New Words" />
+    <textarea id="newLevelWords" placeholder="word1, word2, word3, word4, word5"></textarea>
+    <button class="green" onclick="addLevel()">Add Level</button>
+
+    <hr />
+
+    <button class="pink" onclick="resetProgress()">Reset Progress</button>
+    <button class="gray" onclick="restoreDefaults()">Restore Default Levels</button>
+  </section>
+
+</div>
+
+<script>
+const STORAGE_KEY = "sightWordTreasureHuntV1";
+
+const defaultLevels = [
+  { name: "Level 1 — First Words", theme: "beach", words: ["me", "he", "do", "go", "no"] },
+  { name: "Level 2 — Early Sight Words", theme: "forest", words: ["my", "can", "you", "we", "see"] },
+  { name: "Level 3 — -at Family", theme: "pirate", words: ["cat", "bat", "sat", "mat", "hat"] },
+  { name: "Level 4 — -an Family", theme: "castle", words: ["can", "man", "ran", "fan", "pan"] },
+  { name: "Level 5 — Short i Words", theme: "volcano", words: ["it", "bit", "fit", "hit", "did"] },
+  { name: "Level 6 — -ig / -in Words", theme: "cave", words: ["big", "pig", "dig", "wig", "fin"] },
+  { name: "Level 7 — More Short i", theme: "beach", words: ["pin", "fin", "win", "tin", "get"] },
+  { name: "Level 8 — -og / -ox Words", theme: "forest", words: ["dog", "fog", "fox", "box", "mob"] },
+  { name: "Level 9 — -op / -ot Words", theme: "pirate", words: ["hop", "top", "mop", "pop", "pot"] },
+  { name: "Level 10 — Mixed Short O", theme: "castle", words: ["hot", "not", "dot", "cot", "rob"] },
+  { name: "Level 11 — Core Sight Words", theme: "volcano", words: ["the", "and", "for", "was", "are"] },
+  { name: "Level 12 — Bigger Sight Words", theme: "cave", words: ["is", "all", "look", "like", "have"] },
+  { name: "Level 13 — Advanced Sight Words", theme: "beach", words: ["some", "with", "one", "this", "that"] },
+  { name: "Level 14 — Boss Level", theme: "pirate", words: ["them", "they", "then", "there", "what"] }
+];
+
+let state = loadState();
+let currentLevelIndex = 0;
+let currentCoins = [];
+let activeCoin = null;
+let levelProgress = {};
+
+function loadState() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) return JSON.parse(saved);
+
+  return {
+    levels: defaultLevels,
+    unlockedLevel: 0,
+    completedLevels: [],
+    totalCoins: 0
+  };
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function showHome() {
+  document.getElementById("homeScreen").classList.remove("hidden");
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("parentScreen").classList.add("hidden");
+  renderHome();
+}
+
+function showParent() {
+  document.getElementById("homeScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("parentScreen").classList.remove("hidden");
+  renderParent();
+}
+
+function renderHome() {
+  document.getElementById("coinTotal").textContent = state.totalCoins;
+
+  const grid = document.getElementById("levelGrid");
+  grid.innerHTML = "";
+
+  state.levels.forEach((level, index) => {
+    const locked = index > state.unlockedLevel;
+    const completed = state.completedLevels.includes(index);
+
+    const div = document.createElement("div");
+    div.className = "level-card" + (locked ? " locked" : "");
+    div.innerHTML = `
+      <h3>${completed ? "⭐ " : ""}${escapeHTML(level.name)}</h3>
+      <p>${escapeHTML(level.words.join(", "))}</p>
+      <button class="${locked ? "gray" : "primary"}" ${locked ? "disabled" : ""}>
+        ${locked ? "Locked" : "Play"}
+      </button>
+    `;
+
+    div.querySelector("button").onclick = () => {
+      if (!locked) startLevel(index);
+    };
+
+    grid.appendChild(div);
+  });
+}
+
+function startLevel(index) {
+  currentLevelIndex = index;
+  const level = state.levels[index];
+
+  levelProgress = {};
+  level.words.forEach(word => levelProgress[word] = 0);
+
+  currentCoins = [];
+  level.words.forEach(word => {
+    for (let i = 0; i < 3; i++) {
+      currentCoins.push({ word, found: false, sorted: false });
+    }
+  });
+
+  shuffle(currentCoins);
+  activeCoin = null;
+
+  document.getElementById("homeScreen").classList.add("hidden");
+  document.getElementById("parentScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+
+  renderGame();
+}
+
+function renderGame() {
+  const level = state.levels[currentLevelIndex];
+
+  document.getElementById("levelTitle").textContent = level.name;
+  document.getElementById("mapTitle").textContent = getMapTitle(level.theme);
+  document.getElementById("map").className = "map " + level.theme;
+
+  renderProgress();
+  renderSpots();
+
+  if (!activeCoin) {
+    document.getElementById("coinPanel").classList.add("hidden");
+  }
+}
+
+function renderProgress() {
+  const grid = document.getElementById("progressGrid");
+  grid.innerHTML = "";
+
+  state.levels[currentLevelIndex].words.forEach(word => {
+    const count = levelProgress[word] || 0;
+    const stars = "★".repeat(count) + "☆".repeat(3 - count);
+
+    const div = document.createElement("div");
+    div.className = "progress-word";
+    div.innerHTML = `
+      ${escapeHTML(word)}
+      <div class="stars">${stars}</div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function renderSpots() {
+  const spots = document.getElementById("spots");
+  spots.innerHTML = "";
+
+  currentCoins.forEach((coin, index) => {
+    const btn = document.createElement("button");
+    btn.className = "spot" + (coin.sorted ? " found" : "");
+    btn.innerHTML = coin.sorted ? "🪙" : "✨";
+
+    if (coin.sorted) {
+      btn.disabled = true;
+    } else {
+      btn.onclick = () => revealCoin(index);
+    }
+
+    spots.appendChild(btn);
+  });
+}
+
+function revealCoin(index) {
+  const coin = currentCoins[index];
+
+  if (coin.sorted) return;
+
+  activeCoin = { ...coin, index };
+
+  document.getElementById("message").textContent = "Read the coin, then sort it into the matching chest!";
+  renderCoinPanel();
+  speak(activeCoin.word);
+}
+
+function renderCoinPanel() {
+  document.getElementById("coinPanel").classList.remove("hidden");
+  document.getElementById("coin").textContent = activeCoin.word;
+
+  const chests = document.getElementById("chests");
+  chests.innerHTML = "";
+
+  const choices = getChestChoices(activeCoin.word);
+
+  choices.forEach(choice => {
+    const btn = document.createElement("button");
+    btn.className = "chest";
+    btn.textContent = "📦 " + choice;
+
+    btn.onclick = () => {
+      speak(choice);
+
+      setTimeout(() => {
+        if (choice === activeCoin.word) {
+          correctSort();
+        } else {
+          wrongSort(btn);
+        }
+      }, 250);
+    };
+
+    chests.appendChild(btn);
+  });
+}
+
+function getChestChoices(target) {
+  const levelWords = state.levels[currentLevelIndex].words.filter(w => w !== target);
+  shuffle(levelWords);
+
+  let choices = [target, ...levelWords.slice(0, 2)];
+
+  while (choices.length < 3) {
+    choices.push(target);
+  }
+
+  return shuffle(choices);
+}
+
+function correctSort() {
+  const coin = currentCoins[activeCoin.index];
+  coin.sorted = true;
+
+  levelProgress[coin.word]++;
+  state.totalCoins++;
+  saveState();
+
+  activeCoin = null;
+
+  document.getElementById("message").textContent = "Great job! You sorted the coin!";
+  document.getElementById("coinPanel").classList.add("hidden");
+
+  renderProgress();
+  renderSpots();
+  checkLevelComplete();
+}
+
+function wrongSort(button) {
+  document.getElementById("message").textContent = "Not quite! Try another chest.";
+  button.classList.add("shake");
+  setTimeout(() => button.classList.remove("shake"), 400);
+}
+
+function checkLevelComplete() {
+  const allSorted = currentCoins.every(coin => coin.sorted);
+
+  if (!allSorted) return;
+
+  if (!state.completedLevels.includes(currentLevelIndex)) {
+    state.completedLevels.push(currentLevelIndex);
+  }
+
+  if (currentLevelIndex === state.unlockedLevel && state.unlockedLevel < state.levels.length - 1) {
+    state.unlockedLevel++;
+  }
+
+  saveState();
+
+  setTimeout(() => {
+    alert("🎉 Treasure Found! You completed the level!");
+    showHome();
+  }, 500);
+}
+
+function readActiveWord() {
+  if (activeCoin) {
+    speak(activeCoin.word);
+  } else {
+    document.getElementById("message").textContent = "Find a coin first, then I can read it!";
+  }
+}
+
+function speak(text) {
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.75;
+  utterance.pitch = 1;
+  window.speechSynthesis.speak(utterance);
+}
+
+function renderParent() {
+  const container = document.getElementById("parentLevels");
+  container.innerHTML = "";
+
+  state.levels.forEach((level, index) => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+      <h3>${escapeHTML(level.name)}</h3>
+      <input id="name-${index}" value="${escapeHTML(level.name)}" />
+      <textarea id="words-${index}">${escapeHTML(level.words.join(", "))}</textarea>
+      <button class="blue" onclick="saveLevel(${index})">Save Level</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function saveLevel(index) {
+  const name = document.getElementById(`name-${index}`).value.trim();
+  const words = document.getElementById(`words-${index}`).value
+    .split(",")
+    .map(word => word.trim().toLowerCase())
+    .filter(word => word.length > 0)
+    .slice(0, 5);
+
+  if (words.length !== 5) {
+    alert("Please use exactly 5 words for this level.");
+    return;
+  }
+
+  state.levels[index].name = name || `Level ${index + 1}`;
+  state.levels[index].words = words;
+  saveState();
+  alert("Level saved!");
+  renderParent();
+}
+
+function addLevel() {
+  const name = document.getElementById("newLevelName").value.trim() || `Level ${state.levels.length + 1}`;
+  const words = document.getElementById("newLevelWords").value
+    .split(",")
+    .map(word => word.trim().toLowerCase())
+    .filter(word => word.length > 0)
+    .slice(0, 5);
+
+  if (words.length !== 5) {
+    alert("Please enter exactly 5 words.");
+    return;
+  }
+
+  const themes = ["beach", "forest", "pirate", "castle", "volcano", "cave"];
+
+  state.levels.push({
+    name,
+    theme: themes[state.levels.length % themes.length],
+    words
+  });
+
+  saveState();
+
+  document.getElementById("newLevelName").value = "";
+  document.getElementById("newLevelWords").value = "";
+
+  alert("New level added!");
+  renderParent();
+}
+
+function resetProgress() {
+  if (!confirm("Reset coins, completed levels, and unlocked levels?")) return;
+
+  state.unlockedLevel = 0;
+  state.completedLevels = [];
+  state.totalCoins = 0;
+  saveState();
+  alert("Progress reset.");
+  renderParent();
+}
+
+function restoreDefaults() {
+  if (!confirm("Restore default levels? This will remove custom levels.")) return;
+
+  state = {
+    levels: defaultLevels,
+    unlockedLevel: 0,
+    completedLevels: [],
+    totalCoins: 0
+  };
+
+  saveState();
+  alert("Default levels restored.");
+  renderParent();
+}
+
+function getMapTitle(theme) {
+  const titles = {
+    beach: "🏝 Treasure Beach",
+    forest: "🌲 Forest Treasure Trail",
+    pirate: "🏴‍☠️ Pirate Cove",
+    castle: "🏰 Castle Treasure Room",
+    volcano: "🌋 Volcano Valley",
+    cave: "💎 Crystal Cave"
+  };
+
+  return titles[theme] || "🗺 Treasure Map";
+}
+
+function shuffle(array) {
+  const copy = [...array];
+
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+
+  return copy;
+}
+
+function escapeHTML(text) {
+  return String(text).replace(/[&<>"']/g, function(match) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[match];
+  });
+}
+
+showHome();
+</script>
+</body>
+</html>
