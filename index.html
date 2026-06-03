@@ -2,36 +2,42 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Sight Word Treasure Hunt</title>
+
 <style>
 * { box-sizing: border-box; }
 
 :root {
+  --navy: #12305f;
   --blue: #1976d2;
-  --navy: #14305f;
   --orange: #ff6b00;
   --yellow: #ffd166;
+  --purple: #7446c8;
+  --green: #23965a;
+  --pink: #f05a9d;
   --cream: #fffaf0;
-  --purple: #7e57c2;
-  --green: #2ca25f;
-  --teal: #1aa6a6;
-  --pink: #ff5ca8;
+}
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  font-family: "Arial Rounded MT Bold", "Trebuchet MS", Arial, sans-serif;
+  background: radial-gradient(circle at top, #ffffff 0%, #f6fbff 42%, #fff6d5 100%);
+  color: var(--navy);
+  overscroll-behavior: none;
 }
 
 body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: "Arial Rounded MT Bold", "Trebuchet MS", Arial, sans-serif;
-  background: radial-gradient(circle at top, #ffffff 0%, #f5fbff 42%, #fff6d5 100%);
-  color: var(--navy);
+  height: 100dvh;
+  overflow: hidden;
 }
 
 .app {
   width: min(1180px, 100%);
   height: 100dvh;
   margin: 0 auto;
-  padding: 8px;
+  padding: 6px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -41,24 +47,24 @@ body {
 
 button {
   border: 0;
-  border-radius: 16px;
-  padding: 10px 14px;
+  border-radius: 14px;
+  padding: 8px 11px;
   font-family: inherit;
   font-weight: 900;
-  font-size: .95rem;
+  font-size: .82rem;
   cursor: pointer;
   color: var(--navy);
-  box-shadow: 0 6px 0 rgba(0,0,0,.14);
+  box-shadow: 0 4px 0 rgba(0,0,0,.14);
   touch-action: manipulation;
 }
 
 button:active {
-  transform: translateY(3px);
-  box-shadow: 0 3px 0 rgba(0,0,0,.14);
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(0,0,0,.14);
 }
 
 .home-btn { background: white; }
-.read-btn { background: #1976d2; color: white; }
+.read-btn { background: var(--blue); color: white; }
 .parent-btn { background: var(--purple); color: white; }
 .gold-btn { background: var(--yellow); }
 .green-btn { background: #b7e4c7; }
@@ -66,16 +72,22 @@ button:active {
 .gray-btn { background: #e9ecef; }
 
 .top-ui {
-  background: rgba(255,255,255,.96);
-  border-radius: 20px;
-  padding: 8px 10px;
+  background: rgba(255,255,255,.97);
+  border-radius: 16px;
+  padding: 6px 8px;
   display: grid;
   grid-template-columns: auto auto 1fr auto auto;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
-  box-shadow: 0 8px 18px rgba(0,0,0,.12);
-  margin-bottom: 6px;
+  box-shadow: 0 7px 16px rgba(0,0,0,.12);
+  margin-bottom: 4px;
   flex: 0 0 auto;
+}
+
+.home-btn,
+.read-btn,
+.parent-btn {
+  min-height: 42px;
 }
 
 .title {
@@ -84,74 +96,56 @@ button:active {
 }
 
 .title .small {
-  font-size: clamp(1.05rem, 2.6vw, 1.8rem);
+  font-size: clamp(.95rem, 2vw, 1.35rem);
   color: var(--navy);
   font-weight: 900;
 }
 
 .title .big {
-  font-size: clamp(1.45rem, 3.8vw, 2.65rem);
+  font-size: clamp(1.25rem, 3.1vw, 2.15rem);
   color: var(--orange);
   font-weight: 900;
-  text-shadow: 0 3px 0 rgba(255,167,38,.25);
+  text-shadow: 0 2px 0 rgba(255,167,38,.22);
 }
 
 .coin-badge {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
+  font-size: .82rem;
+  line-height: 1.1;
+  min-width: 118px;
   font-weight: 900;
-  color: var(--navy);
 }
 
 .coin-icon {
-  width: 44px;
-  height: 44px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   background: radial-gradient(circle, #fff3b0, #f4b942);
-  border: 5px solid #d99a00;
+  border: 3px solid #d99a00;
   display: grid;
   place-items: center;
-  font-size: 1.5rem;
+  font-size: 1.15rem;
+  flex: 0 0 auto;
 }
 
 .coin-count {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: var(--green);
 }
 
 .card {
-  background: rgba(255,255,255,.94);
-  border-radius: 20px;
-  padding: 10px 14px;
+  background: rgba(255,255,255,.95);
+  border-radius: 18px;
+  padding: 12px;
   box-shadow: 0 8px 18px rgba(0,0,0,.10);
-  margin-bottom: 6px;
 }
 
-#homeScreen,
-#parentScreen {
-  overflow: auto;
-}
-
-#gameScreen:not(.hidden) {
+.home-screen,
+.parent-screen {
   flex: 1 1 auto;
-  min-height: 0;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 6px;
-}
-
-#gameScreen > .card {
-  margin: 0;
-}
-
-#gameScreen .scene-area {
-  min-height: 0;
-}
-
-#levelTitle {
-  font-size: clamp(1rem, 2.2vw, 1.35rem);
-  margin: 0 0 4px;
+  overflow: auto;
 }
 
 .home-screen h2,
@@ -169,8 +163,8 @@ button:active {
 .level-card {
   background: #eef8ff;
   border: 4px solid #90dbf4;
-  border-radius: 22px;
-  padding: 14px;
+  border-radius: 20px;
+  padding: 12px;
   text-align: center;
 }
 
@@ -183,42 +177,87 @@ button:active {
   margin: 0 0 8px;
 }
 
-.instruction-pill {
-  position: absolute;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
-  background: #fff5d6;
-  border: 3px solid #f0d48b;
-  border-radius: 999px;
-  padding: 12px 26px;
-  font-size: clamp(1rem, 2.3vw, 1.45rem);
+#gameScreen:not(.hidden) {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 4px;
+}
+
+.compact-progress-card {
+  padding: 5px 8px;
+  border-radius: 14px;
+}
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+
+.progress-word {
+  background: white;
+  border: 2px solid #f0dfad;
+  border-radius: 12px;
+  padding: 4px 5px;
   font-weight: 900;
-  color: #613b0b;
-  box-shadow: 0 6px 14px rgba(0,0,0,.12);
+  font-size: clamp(.76rem, 1.55vw, .95rem);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.progress-word:nth-child(1) { color: #1565c0; border-color: #1565c0; }
+.progress-word:nth-child(2) { color: #7446c8; border-color: #7446c8; }
+.progress-word:nth-child(3) { color: #23965a; border-color: #23965a; }
+.progress-word:nth-child(4) { color: #ff6b00; border-color: #ff9f1c; }
+.progress-word:nth-child(5) { color: #f05a9d; border-color: #f05a9d; }
+
+.stars {
+  color: #f6b800;
+  font-size: clamp(.72rem, 1.45vw, .9rem);
+  letter-spacing: 0;
   white-space: nowrap;
 }
 
 .scene-area {
   position: relative;
-  border-radius: 22px;
-  overflow: hidden;
-  border: 6px solid #ffd166;
-  box-shadow: 0 10px 20px rgba(0,0,0,.14);
-  background: #c9f4ff;
-  min-height: 0;
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border: 5px solid var(--yellow);
+  border-radius: 18px;
+  background: #bdefff;
+  box-shadow: 0 8px 18px rgba(0,0,0,.14);
 }
 
 .scene-img {
-  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center center;
+  display: block;
   user-select: none;
   -webkit-user-select: none;
   pointer-events: none;
+}
+
+.layer-object {
+  position: absolute;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
+  pointer-events: none;
+  filter: drop-shadow(0 4px 3px rgba(0,0,0,.18));
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.layer-object.found {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.75);
 }
 
 .hotspot {
@@ -227,6 +266,7 @@ button:active {
   box-shadow: none;
   border-radius: 50%;
   padding: 0;
+  z-index: 8;
 }
 
 .hotspot:active {
@@ -234,42 +274,60 @@ button:active {
   box-shadow: none;
 }
 
-.hotspot.found {
-  display: none;
-}
-
 .search-marker {
   position: absolute;
   z-index: 7;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 1.55rem;
-  background: rgba(255, 255, 255, .86);
-  border: 3px solid rgba(255, 209, 102, .95);
-  box-shadow: 0 0 14px rgba(255, 209, 102, .95);
+  font-size: 1.2rem;
+  background: rgba(255,255,255,.82);
+  border: 3px solid rgba(255,209,102,.96);
+  box-shadow: 0 0 14px rgba(255,209,102,.96);
   pointer-events: none;
   animation: markerPulse 1.25s infinite ease-in-out;
 }
 
 @keyframes markerPulse {
-  0%, 100% {
-    transform: scale(.95);
-    box-shadow: 0 0 10px rgba(255, 209, 102, .8);
-  }
-  50% {
-    transform: scale(1.16);
-    box-shadow: 0 0 22px rgba(255, 209, 102, 1);
-  }
+  0%, 100% { transform: scale(.95); }
+  50% { transform: scale(1.16); }
 }
 
+.coin-pop {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 20;
+  width: min(170px, 30%);
+  background: rgba(255,255,255,.97);
+  border-radius: 16px;
+  padding: 7px;
+  box-shadow: 0 10px 22px rgba(0,0,0,.22);
+  text-align: center;
+}
+
+.big-coin {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  margin: 0 auto;
+  background: radial-gradient(circle at 30% 25%, #fff8c8 0%, #ffd44f 38%, #e6a800 100%);
+  border: 5px solid #d99a00;
+  box-shadow: inset -6px -8px 0 rgba(0,0,0,.08), 0 6px 12px rgba(0,0,0,.16);
+  display: grid;
+  place-items: center;
+  color: #6b3e00;
+  font-size: clamp(1.25rem, 3vw, 1.85rem);
+  font-weight: 900;
+  text-transform: lowercase;
+}
 
 .sparkle {
   position: absolute;
-  z-index: 8;
-  font-size: 2.8rem;
+  z-index: 12;
+  font-size: 2.3rem;
   pointer-events: none;
   animation: sparklePop .8s forwards;
 }
@@ -280,126 +338,30 @@ button:active {
   100% { transform: scale(.8); opacity: 0; }
 }
 
-.progress-panel {
-  background: rgba(255,250,240,.96);
-  border-radius: 0 0 24px 24px;
-  padding: 12px 18px 16px;
-  box-shadow: 0 9px 22px rgba(0,0,0,.08);
-}
-
-.progress-title {
-  font-weight: 900;
-  color: var(--navy);
-  margin-bottom: 8px;
-  font-size: 1.15rem;
-}
-
-.progress-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-}
-
-.progress-word {
-  background: white;
-  border: 2px solid #f0dfad;
-  border-radius: 14px;
-  padding: 5px;
-  font-weight: 900;
-  font-size: clamp(.85rem, 1.8vw, 1.05rem);
-}
-
-.progress-word:nth-child(1) { color: #1565c0; }
-.progress-word:nth-child(2) { color: #7e57c2; }
-.progress-word:nth-child(3) { color: #2ca25f; }
-.progress-word:nth-child(4) { color: #ff6b00; }
-.progress-word:nth-child(5) { color: #ff5ca8; }
-
-.stars {
-  margin-top: 2px;
-  color: #f6b800;
-  letter-spacing: 1px;
-  font-size: clamp(.9rem, 1.8vw, 1.05rem);
-}
-
-.coin-pop {
-  position: absolute;
-  left: 12px;
-  bottom: 12px;
-  z-index: 20;
-  width: min(250px, 36%);
-  background: rgba(255,255,255,.96);
-  border-radius: 20px;
-  padding: 10px;
-  box-shadow: 0 10px 22px rgba(0,0,0,.22);
-  text-align: center;
-}
-
-.coin-pop h2 {
-  color: var(--orange);
-  margin: 0 0 4px;
-  font-size: clamp(1rem, 2vw, 1.25rem);
-}
-
-.coin-pop p { margin: 4px 0 0; font-size: .9rem; }
-
-.big-coin {
-  width: 118px;
-  height: 118px;
-  max-width: 80%;
-  border-radius: 50%;
-  margin: 8px auto;
-  background: radial-gradient(circle at 30% 25%, #fff8c8 0%, #ffd44f 38%, #e6a800 100%);
-  border: 8px solid #d99a00;
-  box-shadow: inset -8px -10px 0 rgba(0,0,0,.08), 0 8px 16px rgba(0,0,0,.16);
-  display: grid;
-  place-items: center;
-  color: #6b3e00;
-  font-size: clamp(1.65rem, 4vw, 2.4rem);
-  font-weight: 900;
-  text-transform: lowercase;
-}
-
 .sort-area {
   background: rgba(255,250,240,.98);
-  border-radius: 20px;
-  margin-top: 0;
-  padding: 8px 12px 10px;
-  box-shadow: 0 8px 18px rgba(0,0,0,.10);
+  border-radius: 16px;
+  padding: 5px 8px 7px;
+  box-shadow: 0 7px 16px rgba(0,0,0,.10);
   flex: 0 0 auto;
-}
-
-.sort-area h2 {
-  margin: 0 0 2px;
-  color: var(--navy);
-  font-size: clamp(1rem, 2vw, 1.25rem);
-}
-
-.sort-area p {
-  margin: 0 0 6px;
-  font-weight: 800;
-  font-size: .9rem;
 }
 
 .chests {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+  gap: 7px;
 }
 
 .chest {
   position: relative;
-  min-height: 74px;
-  border-radius: 15px 15px 11px 11px;
+  min-height: 62px;
+  border-radius: 13px 13px 10px 10px;
   border: 3px solid #d99a00;
   background: linear-gradient(#1e88e5 0 22%, #1565c0 22% 42%, #1e88e5 42% 62%, #1565c0 62% 82%, #1e88e5 82%);
-  color: white;
-  font-size: 1.65rem;
-  font-weight: 900;
   display: flex;
   align-items: end;
   justify-content: center;
-  padding-bottom: 6px;
+  padding-bottom: 4px;
 }
 
 .chest:nth-child(2) {
@@ -421,41 +383,42 @@ button:active {
 .chest::before {
   content: "";
   position: absolute;
-  top: -10px;
+  top: -8px;
   left: 10%;
   width: 80%;
-  height: 24px;
+  height: 20px;
   border-radius: 20px 20px 7px 7px;
   background: inherit;
-  border: 4px solid #d99a00;
+  border: 3px solid #d99a00;
 }
 
 .chest::after {
   content: "🔒";
   position: absolute;
-  top: 15px;
+  top: 12px;
   left: 50%;
   transform: translateX(-50%);
-  background: #ffd166;
+  background: var(--yellow);
   color: #6b3e00;
-  border: 3px solid #d99a00;
+  border: 2px solid #d99a00;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   display: grid;
   place-items: center;
-  font-size: .85rem;
+  font-size: .7rem;
 }
 
 .chest-label {
   background: #fff8dc;
   color: var(--navy);
-  border: 3px solid #d99a00;
-  border-radius: 10px;
-  min-width: 58px;
-  padding: 4px 7px;
+  border: 2px solid #d99a00;
+  border-radius: 8px;
+  min-width: 46px;
+  padding: 3px 6px;
   z-index: 3;
-  font-size: clamp(.82rem, 1.7vw, 1.05rem);
+  font-size: clamp(.75rem, 1.5vw, .95rem);
+  font-weight: 900;
 }
 
 .chest.shake {
@@ -470,17 +433,6 @@ button:active {
   100% { transform: translateX(0); }
 }
 
-.feedback {
-  background: #e3f2fd;
-  border-radius: 16px;
-  color: #1565c0;
-  font-weight: 900;
-  margin: 4px auto 6px;
-  padding: 6px 10px;
-  max-width: 560px;
-  font-size: clamp(.85rem, 1.8vw, 1rem);
-}
-
 .parent-screen input,
 .parent-screen textarea {
   width: 100%;
@@ -493,243 +445,6 @@ button:active {
 }
 
 .parent-screen textarea { min-height: 80px; }
-
-@media (max-width: 780px) {
-  .top-ui {
-    grid-template-columns: auto auto 1fr auto auto;
-    gap: 6px;
-  }
-
-  .home-btn,
-  .read-btn,
-  .parent-btn {
-    padding: 8px 9px;
-    font-size: .8rem;
-  }
-
-  .coin-badge {
-    gap: 5px;
-    font-size: .8rem;
-  }
-
-  .coin-icon {
-    width: 34px;
-    height: 34px;
-    font-size: 1.15rem;
-  }
-
-  .instruction-pill {
-    top: 8px;
-    padding: 7px 12px;
-    white-space: normal;
-    max-width: 90%;
-    font-size: .9rem;
-  }
-
-  .progress-grid {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-  }
-
-  .coin-pop {
-    width: min(210px, 42%);
-  }
-
-  .big-coin {
-    width: 92px;
-    height: 92px;
-  }
-}
-
-@media (max-width: 560px) {
-  body { overflow: auto; }
-  .app { height: auto; overflow: visible; }
-  #gameScreen:not(.hidden) { display: block; }
-  .scene-area { height: auto; }
-  .scene-img { height: auto; object-fit: contain; }
-  .chests { grid-template-columns: repeat(5, 1fr); gap: 5px; }
-}
-
-/* --- Final compact iPad game layout --- */
-.app {
-  height: 100dvh;
-  overflow: hidden;
-  padding: 6px;
-}
-
-.top-ui {
-  border-radius: 16px;
-  padding: 6px 8px;
-  gap: 8px;
-  margin-bottom: 4px;
-  flex: 0 0 auto;
-}
-
-button {
-  padding: 8px 11px;
-  border-radius: 14px;
-  font-size: .82rem;
-}
-
-.home-btn,
-.read-btn,
-.parent-btn {
-  min-height: 42px;
-}
-
-.coin-badge {
-  gap: 6px;
-  font-size: .82rem;
-  line-height: 1.1;
-  min-width: 118px;
-}
-
-.coin-icon {
-  width: 34px;
-  height: 34px;
-  border-width: 3px;
-  font-size: 1.15rem;
-  flex: 0 0 auto;
-}
-
-.coin-count {
-  font-size: 1.1rem;
-}
-
-.title .small {
-  font-size: clamp(.95rem, 2vw, 1.35rem);
-}
-
-.title .big {
-  font-size: clamp(1.25rem, 3.1vw, 2.15rem);
-}
-
-#gameScreen:not(.hidden) {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 4px;
-}
-
-.compact-progress-card {
-  padding: 5px 8px;
-  margin: 0;
-  border-radius: 14px;
-}
-
-.progress-grid {
-  grid-template-columns: repeat(5, 1fr);
-  gap: 5px;
-}
-
-.progress-word {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 4px 5px;
-  border-width: 2px;
-  border-radius: 12px;
-  font-size: clamp(.76rem, 1.55vw, .95rem);
-  line-height: 1;
-}
-
-.stars {
-  margin-top: 0;
-  font-size: clamp(.72rem, 1.45vw, .9rem);
-  letter-spacing: 0;
-  white-space: nowrap;
-}
-
-.scene-area {
-  height: 100%;
-  min-height: 0;
-  border-width: 5px;
-  border-radius: 18px;
-}
-
-.scene-img {
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-}
-
-.instruction-pill,
-.feedback,
-.sort-area h2,
-.sort-area p,
-#sortFeedback {
-  display: none !important;
-}
-
-.sort-area {
-  margin-top: 0;
-  padding: 5px 8px 7px;
-  border-radius: 16px;
-  flex: 0 0 auto;
-}
-
-.chests {
-  grid-template-columns: repeat(5, 1fr);
-  gap: 7px;
-}
-
-.chest {
-  min-height: 62px;
-  border-width: 3px;
-  border-radius: 13px 13px 10px 10px;
-  padding-bottom: 4px;
-}
-
-.chest::before {
-  top: -8px;
-  height: 20px;
-  border-width: 3px;
-}
-
-.chest::after {
-  top: 12px;
-  width: 24px;
-  height: 24px;
-  border-width: 2px;
-  font-size: .7rem;
-}
-
-.chest-label {
-  min-width: 46px;
-  padding: 3px 6px;
-  border-width: 2px;
-  border-radius: 8px;
-  font-size: clamp(.75rem, 1.5vw, .95rem);
-}
-
-.coin-pop {
-  left: 10px;
-  bottom: 10px;
-  width: min(170px, 30%);
-  padding: 7px;
-  border-radius: 16px;
-}
-
-.coin-pop h2,
-.coin-pop p {
-  display: none;
-}
-
-.big-coin {
-  width: 86px;
-  height: 86px;
-  border-width: 5px;
-  margin: 0 auto;
-  font-size: clamp(1.25rem, 3vw, 1.85rem);
-}
-
-.search-marker {
-  width: 28px;
-  height: 28px;
-  font-size: 1.2rem;
-}
 
 @media (max-width: 780px) {
   .top-ui {
@@ -765,13 +480,12 @@ button {
 }
 
 @media (max-width: 560px) {
-  body { overflow: auto; }
+  body { overflow: auto; height: auto; }
   .app { height: auto; overflow: visible; }
   #gameScreen:not(.hidden) { display: block; }
   .scene-area { height: auto; }
   .scene-img { height: auto; object-fit: contain; }
 }
-
 </style>
 </head>
 
@@ -811,6 +525,7 @@ button {
 
     <section class="scene-area" id="sceneArea">
       <img src="beach-scene.png" class="scene-img" alt="Beach hidden object scene">
+      <div id="objectLayer"></div>
       <div id="hotspots"></div>
 
       <div id="coinPop" class="coin-pop hidden">
@@ -841,7 +556,7 @@ button {
 </div>
 
 <script>
-const STORAGE_KEY = "sightWordTreasureHuntCompactV5";
+const STORAGE_KEY = "sightWordTreasureHuntFinalV2";
 
 const defaultLevels = [
   { name: "Level 1 — First Words", words: ["me", "he", "do", "go", "no"] },
@@ -860,22 +575,24 @@ const defaultLevels = [
   { name: "Level 14 — Boss Level", words: ["them", "they", "then", "there", "what"] }
 ];
 
+// Percent-based hotspot positions on the beach image.
+// These match removable layered objects that disappear after each coin is sorted.
 const hotspotPositions = [
-  { x: 10, y: 58, w: 12, h: 18 },
-  { x: 23, y: 64, w: 12, h: 15 },
-  { x: 32, y: 66, w: 9, h: 12 },
-  { x: 46, y: 63, w: 12, h: 17 },
-  { x: 56, y: 58, w: 10, h: 18 },
-  { x: 66, y: 65, w: 9, h: 14 },
-  { x: 74, y: 63, w: 10, h: 14 },
-  { x: 80, y: 52, w: 9, h: 14 },
-  { x: 88, y: 50, w: 10, h: 18 },
-  { x: 90, y: 70, w: 9, h: 14 },
-  { x: 13, y: 42, w: 10, h: 12 },
-  { x: 35, y: 36, w: 20, h: 23 },
-  { x: 63, y: 31, w: 18, h: 16 },
-  { x: 73, y: 29, w: 20, h: 22 },
-  { x: 5, y: 82, w: 12, h: 14 }
+  { x: 8, y: 45, w: 8, h: 14, icon: "🪣" },
+  { x: 20, y: 52, w: 8, h: 12, icon: "🐚" },
+  { x: 31, y: 41, w: 8, h: 13, icon: "🪨" },
+  { x: 40, y: 45, w: 8, h: 13, icon: "⭐" },
+  { x: 52, y: 52, w: 8, h: 13, icon: "🦀" },
+  { x: 66, y: 48, w: 8, h: 13, icon: "🏖️" },
+  { x: 85, y: 38, w: 8, h: 14, icon: "🌴" },
+  { x: 90, y: 64, w: 8, h: 13, icon: "🪨" },
+  { x: 74, y: 67, w: 8, h: 13, icon: "🧺" },
+  { x: 60, y: 76, w: 8, h: 13, icon: "🩴" },
+  { x: 45, y: 71, w: 8, h: 13, icon: "🐚" },
+  { x: 33, y: 74, w: 8, h: 13, icon: "🏰" },
+  { x: 20, y: 79, w: 8, h: 13, icon: "⚓" },
+  { x: 5, y: 72, w: 8, h: 13, icon: "🐢" },
+  { x: 92, y: 76, w: 7, h: 12, icon: "🌺" }
 ];
 
 let state = loadState();
@@ -887,6 +604,7 @@ let activeCoin = null;
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) return JSON.parse(saved);
+
   return {
     levels: defaultLevels,
     unlockedLevel: 0,
@@ -961,12 +679,13 @@ function startLevel(index) {
   document.getElementById("parentScreen").classList.add("hidden");
   document.getElementById("gameScreen").classList.remove("hidden");
   document.getElementById("coinPop").classList.add("hidden");
-  
+
   renderGame();
 }
 
 function renderGame() {
   renderProgress();
+  renderObjects();
   renderHotspots();
   renderChests();
   updateCoinHeader();
@@ -979,10 +698,28 @@ function renderProgress() {
   state.levels[currentLevelIndex].words.forEach(word => {
     const count = levelProgress[word] || 0;
     const stars = "★".repeat(count) + "☆".repeat(3 - count);
+
     const div = document.createElement("div");
     div.className = "progress-word";
-    div.innerHTML = `${escapeHTML(word)}<div class="stars">${stars}</div>`;
+    div.innerHTML = `${escapeHTML(word)}<span class="stars">${stars}</span>`;
     grid.appendChild(div);
+  });
+}
+
+function renderObjects() {
+  const layer = document.getElementById("objectLayer");
+  layer.innerHTML = "";
+
+  currentCoins.forEach((coin, index) => {
+    if (coin.sorted) return;
+
+    const pos = hotspotPositions[index];
+    const obj = document.createElement("div");
+    obj.className = "layer-object";
+    obj.textContent = pos.icon;
+    obj.style.left = (pos.x + pos.w / 2) + "%";
+    obj.style.top = (pos.y + pos.h / 2) + "%";
+    layer.appendChild(obj);
   });
 }
 
@@ -998,8 +735,8 @@ function renderHotspots() {
     const marker = document.createElement("div");
     marker.className = "search-marker";
     marker.textContent = "✨";
-    marker.style.left = `calc(${pos.x + pos.w / 2}% - 17px)`;
-    marker.style.top = `calc(${pos.y + pos.h / 2}% - 17px)`;
+    marker.style.left = `calc(${pos.x + pos.w / 2}% - 14px)`;
+    marker.style.top = `calc(${pos.y + pos.h / 2}% - 14px)`;
     container.appendChild(marker);
 
     const btn = document.createElement("button");
@@ -1023,7 +760,6 @@ function revealCoin(index) {
   document.getElementById("coinText").textContent = coin.word;
   document.getElementById("coinPop").classList.remove("hidden");
 
-  renderChests();
   speak(coin.word);
 }
 
@@ -1038,14 +774,12 @@ function renderChests() {
     btn.onclick = () => {
       speak(choice);
 
-      if (!activeCoin) {
-        return;
-      }
+      if (!activeCoin) return;
 
       setTimeout(() => {
         if (choice === activeCoin.word) correctSort();
         else wrongSort(btn);
-      }, 280);
+      }, 250);
     };
     chests.appendChild(btn);
   });
@@ -1063,8 +797,8 @@ function correctSort() {
   document.getElementById("coinPop").classList.add("hidden");
 
   renderProgress();
+  renderObjects();
   renderHotspots();
-  renderChests();
   updateCoinHeader();
   saveState();
   checkLevelComplete();
@@ -1107,18 +841,19 @@ function updateCoinHeader() {
 function showSparkle(index) {
   const scene = document.getElementById("sceneArea");
   const pos = hotspotPositions[index];
+
   const sparkle = document.createElement("div");
   sparkle.className = "sparkle";
   sparkle.textContent = "✨";
   sparkle.style.left = (pos.x + pos.w / 2) + "%";
   sparkle.style.top = (pos.y + pos.h / 2) + "%";
+
   scene.appendChild(sparkle);
   setTimeout(() => sparkle.remove(), 850);
 }
 
 function readActiveWord() {
   if (activeCoin) speak(activeCoin.word);
-  else
 }
 
 function speak(text) {
